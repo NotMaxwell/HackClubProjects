@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args) {
@@ -36,7 +37,8 @@ public class Main {
                 "Cardinal", "Finch", "Mockingbird", "Oriole", "Swallow", "Wren", "Warbler", "Thrush", "Starling"};
 
         //Create life Frames
-        String allLives = """
+        String[] scenes = {"""
+                \n
                 |-----------|
                 |           |
                 |
@@ -44,29 +46,26 @@ public class Main {
                 |
                 |
                 |
-                """;
-
-        String oneLifeDown = """
-                |-----------|
-                |           |
-                |          ( )
-                |
-                |
-                |
-                |
-                """;
-
-        String twoLivesDown = """
+                ""","""
+                \n
                 |-----------|
                 |           |
                 |          ( )
+                |
+                |
+                |
+                |
+                ""","""
+                \n
+                |-----------|
+                |           |
+                |          ( )
                 |           |
                 |
                 |
                 |
-                """;
-
-        String threeLivesDown = """
+                ""","""
+                \n
                 |-----------|
                 |           |
                 |          ( )
@@ -74,9 +73,8 @@ public class Main {
                 |
                 |
                 |
-                """;
-
-        String fourLivesDown = """
+                ""","""
+                \n
                 |-----------|
                 |           |
                 |          ( )
@@ -84,9 +82,8 @@ public class Main {
                 |
                 |
                 |
-                """;
-
-        String fiveLivesDown = """
+                ""","""
+                \n
                 |-----------|
                 |           |
                 |          ( )
@@ -94,9 +91,8 @@ public class Main {
                 |          /
                 |
                 |
-                """;
-
-        String sixLivesDown = """
+                ""","""
+                \n
                 |-----------|
                 |           |
                 |          ( )
@@ -104,10 +100,12 @@ public class Main {
                 |          / \\
                 |
                 |
-                """;
-
+                """};
+        ArrayList<Character> guessedLetters = new ArrayList<>();
+        String word;
         //start game loop
-        while(true){
+        while(true) {
+            boolean game = false;
             //start screen
             System.out.println("""
                     Do You Want To Play Hang Man
@@ -115,9 +113,64 @@ public class Main {
                     No: 2""");
             int ans = sc.nextInt();
             //System.out.println(ans);
-            if(ans != 1){
+            if (ans != 1) {
                 System.out.println("Come again\nQuiting");
                 break;
+            }
+            else {
+                game = true;
+                System.out.println("Let the game begin!");
+                //generate random number
+                int num = numGen();
+                word = words[num];
+                //Trouble shooting purposes
+                System.out.println(word);
+            }
+            while(game){
+                //Display lives screen
+                int lives = 0;
+                System.out.println(scenes[lives]);
+                System.out.print("Word: ");
+                for(int i = 0; i < word.length(); i++){
+                    System.out.print("_ ");
+                }
+                //go down one
+                System.out.println();
+                System.out.println("Guess a letter");
+                //Create a ArrayList of guessed letters
+                char guess = sc.next().charAt(0);
+                guessedLetters.add(guess);
+                //Check if the letter is in the word
+                boolean correct = false;
+                for(int i = 0; i < word.length(); i++){
+                    if(word.charAt(i) == guess) {
+                        correct = true;
+                    }
+                }
+                if(correct){
+                    System.out.println("Correct");
+                }
+                else{
+                    lives++;
+                    System.out.println("Incorrect");
+                }
+                //Display lives screen
+                System.out.println(scenes[lives]);
+                //Display word
+                System.out.print("Word: ");
+                for(int i = 0; i < word.length(); i++){
+                    boolean found = false;
+                    for(int j = 0; j < guessedLetters.size(); j++){
+                        if(word.charAt(i) == guessedLetters.get(j)){
+                            System.out.print(word.charAt(i) + " ");
+                            found = true;
+                        }
+                    }
+                    if(!found){
+                        System.out.print("_ ");
+                    }
+                }
+
             }
         }
 

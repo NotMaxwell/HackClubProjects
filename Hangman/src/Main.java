@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.ArrayList;
 
@@ -103,6 +105,8 @@ public class Main {
                 """};
         ArrayList<Character> guessedLetters = new ArrayList<>();
         String word;
+        int lives;
+        String finalWord = "";
         //start game loop
         while(true) {
             boolean game = false;
@@ -122,55 +126,82 @@ public class Main {
                 System.out.println("Let the game begin!");
                 //generate random number
                 int num = numGen();
-                word = words[num];
+                word = words[num].toLowerCase();
                 //Trouble shooting purposes
-                System.out.println(word);
-            }
-            while(game){
+                //System.out.println(word);
                 //Display lives screen
-                int lives = 0;
+                lives = 0;
                 System.out.println(scenes[lives]);
                 System.out.print("Word: ");
                 for(int i = 0; i < word.length(); i++){
                     System.out.print("_ ");
                 }
-                //go down one
-                System.out.println();
-                System.out.println("Guess a letter");
+            }
+            while(game) {
+                System.out.println("\nGuess a letter");
                 //Create a ArrayList of guessed letters
                 char guess = sc.next().charAt(0);
-                guessedLetters.add(guess);
+                boolean in = false;
+                for (int i = 0; i < guessedLetters.size(); i++) {
+                    if (guess == guessedLetters.get(i)) {
+                        in = true;
+                    }
+                }
+                if (in != true) {
+                    guessedLetters.add(guess);
+                }
                 //Check if the letter is in the word
                 boolean correct = false;
-                for(int i = 0; i < word.length(); i++){
-                    if(word.charAt(i) == guess) {
+                for (int i = 0; i < word.length(); i++) {
+                    if (word.charAt(i) == guess) {
                         correct = true;
                     }
                 }
-                if(correct){
+                if (correct) {
                     System.out.println("Correct");
-                }
-                else{
+                } else {
                     lives++;
                     System.out.println("Incorrect");
+                }
+                //check lose condition
+                if (lives > 5) {
+                    System.out.println(scenes[6]);
+                    System.out.println("You Lose");
+                    guessedLetters.clear();
+                    break;
                 }
                 //Display lives screen
                 System.out.println(scenes[lives]);
                 //Display word
                 System.out.print("Word: ");
-                for(int i = 0; i < word.length(); i++){
+                for (int i = 0; i < word.length(); i++) {
                     boolean found = false;
-                    for(int j = 0; j < guessedLetters.size(); j++){
-                        if(word.charAt(i) == guessedLetters.get(j)){
+                    for (int j = 0; j < guessedLetters.size(); j++) {
+                        if (word.charAt(i) == guessedLetters.get(j)) {
                             System.out.print(word.charAt(i) + " ");
+                            finalWord += word.charAt(i);
                             found = true;
                         }
                     }
-                    if(!found){
+                    if (!found) {
                         System.out.print("_ ");
+                        finalWord += "_ ";
                     }
                 }
-
+                System.out.print("\n" + guessedLetters);
+                in = false;
+                for (int i = 0; i < finalWord.length() - 1; i++) {
+                    if (finalWord.charAt(i) == '_') {
+                        in = true;
+                    }
+                }
+                if (!(in)) {
+                    System.out.println("\nCorrect");
+                    guessedLetters.clear();
+                    break;
+                }
+                finalWord = "";
+                in = false;
             }
         }
 
@@ -178,4 +209,6 @@ public class Main {
     public static int numGen(){
         return (int) (Math.random() * 290);
     }
+
 }
+
